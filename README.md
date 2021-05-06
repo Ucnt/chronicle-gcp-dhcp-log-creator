@@ -10,11 +10,11 @@ Unfortunately, GCP doesn't have DHCP logs.  Even if you use Packet Mirroring (e.
 
 Luckily, Chronicle allows you to send it DHCP logs in a CSV format like 
 
-2020-05-29T14:00:00Z,RENEW,192.168.1.1,router1,AABBCC123456 
+```2020-05-29T14:00:00Z,RENEW,192.168.1.1,router1,AABBCC123456 ```
 
 With a format of
 
-{datetime},{DHCP Operation},{IP Address},{hostname},{MAC Address}
+```{datetime},{DHCP Operation},{IP Address},{hostname},{MAC Address}```
 
 Note: Because GCP doesn't easily expose MAC addresses, and they don't provide value in investigations, random one are generated for hosts.
 
