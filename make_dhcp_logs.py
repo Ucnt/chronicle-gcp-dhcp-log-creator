@@ -36,12 +36,23 @@ else:
     historic_ip_host_list="{folder}/gcp-ip-host-list".format(folder=FOLDER_FOR_HISTORIC_LOGS)
     asset_dhcp_list="{folder}/staticip.log".format(folder=FOLDER_FOR_CHRONICLE_LOGS)
 
+
+def check_for_updated_constants_vars():
+    if not (PATH_TO_GCLOUD_COMMAND_DEV or PATH_TO_GCLOUD_COMMAND or FOLDER_FOR_HISTORIC_LOGS or FOLDER_FOR_CHRONICLE_LOGS):
+        print("You need to set all constants.py variables")
+        sys.exit()
+
+    if PROJECTS == ["example-project-name","example-project-name2"]:
+        print("You need to set the projects you want to run this on")
+        sys.exit()
+
+
 def get_cmd_output(command):
     import subprocess
     '''
     Given a terminal command, run the command and return the output
 
-    If an error occurs, exit the program
+    If an error occurs, log the error
     '''
     try:
         'Get output from a given command'
@@ -60,6 +71,11 @@ def get_cmd_output(command):
 
 
 def get_prior_host_dict(project):
+    '''
+    For a given project, return the historic, cached hostname to IP+Mac results as a dictionary
+
+    Dict format: d[hostname] = {"ip" : ip, "mac" : mac}
+    '''
     hosts = {}
     with open("{}-{}".format(historic_ip_host_list, project), "r") as f:
         for line in f:
@@ -68,12 +84,17 @@ def get_prior_host_dict(project):
                 try:
                     ip, hostname, mac = line.strip().split(",")
                     hosts[hostname] = {"ip" : ip, "mac" : mac}
-                except
+                except:
                     pass
     return hosts
 
 
 def get_compute_instance_list(project):
+    '''
+    For a given project, return the current hostname to IP+Mac results from gcloud as a dictionary
+
+    Dict format: d[hostname] = {"ip" : ip, "mac" : mac}
+    '''
     command = '''
         {gcloud_cmd} compute instances list --project {project} --format=json | jq -r '.[] | "\(.name) \(.networkInterfaces[0].networkIP)"'
     '''.format(gcloud_cmd=gcloud_cmd, project=project)
@@ -87,6 +108,11 @@ def get_compute_instance_list(project):
 
 
 def merge_dicts(prior_host_dict, current_instance_dict):
+    '''
+    Given the cached and current hostname to IP+Mac dictionaries, return an updated dictionary to cache
+
+    The dictionary will add an "update" value in order to identify if the host needs to be send to Chronicle    
+    '''
     # Merge the dictionaries into one single dictionary, marking which ones need to be updated
     for hostname, attributes in current_instance_dict.items():
         # If the host has already been seen
@@ -100,7 +126,10 @@ def merge_dicts(prior_host_dict, current_instance_dict):
         # It's a new host that needs a new mac
         else:
             print("Adding new host: {}".format(hostname))
-            new_mac_address = "00:60:2F:%02x:%02x:%02x" % (random.randint(0, 255),
+            new_mac_address = "%02x:%02x:%02x:%02x:%02x:%02x" % (random.randint(0, 255),
+                 random.randint(0, 255),
+                 random.randint(0, 255),
+                 random.randint(0, 255),
                  random.randint(0, 255),
                  random.randint(0, 255))
 
@@ -115,6 +144,11 @@ def merge_dicts(prior_host_dict, current_instance_dict):
 
 
 def write_new_logs(project, host_dict):
+    '''
+    Given the project name and its new hostname to IP+Mac dictionary
+
+    Write the updated (or all logs if --log-all-hosts is specified) to be read by Chronicle
+    '''
     # Open a writer for the new historic and DHCP file to upload to Chronicle
     historics_host_file = open("{}-{}".format(historic_ip_host_list, project), "w+")
     dhcp_file = open(asset_dhcp_list, "w+")
@@ -142,6 +176,9 @@ def write_new_logs(project, host_dict):
 
 
 if __name__ == "__main__":
+    # Be sure all variables have been set
+    check_for_updated_constants_vars()
+
     # Get current hosts
     for project in PROJECTS:
         print("Checking {}".format(project))
