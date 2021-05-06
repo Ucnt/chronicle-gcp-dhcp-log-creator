@@ -3,16 +3,16 @@
 
 Author: Matt Svensson
 
-Purpose: Create Chronicle CSV static IP lists from gcloud compute instance lists
+Purpose: Create Chronicle CSV static IP lists from gcloud compute instances list
 
 Chronicle Log format: 2020-05-29T14:00:00Z,RENEW,192.168.1.1,router1,AABBCC123456
 
-Cron jobs for this script
+Example Cron jobs for this script
 
 # Run every to minutes to look for new instances
-*/2 * * * * python3 /opt/make_dhcp_logs/make_dhcp_logs.py
+*/2 * * * * python3 {folder where this script is put}/make_dhcp_logs.py
 # Run every day to upload DHCP logs for ALL instances, not just new ones.
-0 0 * * * python3 /opt/make_dhcp_logs/make_dhcp_logs.py --log_all_hosts
+0 0 * * * python3 {folder where this script is put}/make_dhcp_logs.py --log_all_hosts
 
 
 '''
@@ -22,25 +22,19 @@ import os
 import random
 import datetime
 import argparse
+from constants import *
 parser = argparse.ArgumentParser(description='')
 parser.add_argument("--log_all_hosts", action="store_true", help="Logs all host DHCP records, not just new+updated ones")
 parser.add_argument("--dev", action="store_true", help="Used if you want to test this script on a local machine")
 args = parser.parse_args()
 if args.dev:
-    gcloud_cmd="{PATH_TO_GCLOUD_COMMAND}"
+    gcloud_cmd=PATH_TO_GCLOUD_COMMAND_DEV
     historic_ip_host_list="gcp-ip-host-list"
     asset_dhcp_list="staticip.log"
 else:
-    gcloud_cmd="{PATH_TO_GCLOUD_COMMAND}"
-    historic_ip_host_list="{PATH_FOR_HISTORIC_LIST_OF_IP_TO_HOST_MAPPINGS}/gcp-ip-host-list"
-    asset_dhcp_list="{PATH_TO_WRITE_NEW_LOGS_TO_FOR_CHRONICLE_INGEST}/staticip.log"
-
-# Projects that you want to run
-projects = [
-    "{PROJECT1}",
-    "{PROJECT2}",
-    "{PROJECT3}",
-]
+    gcloud_cmd=PATH_TO_GCLOUD_COMMAND
+    historic_ip_host_list="{folder}/gcp-ip-host-list".format(folder=FOLDER_FOR_HISTORIC_LOGS)
+    asset_dhcp_list="{folder}/staticip.log".format(folder=FOLDER_FOR_CHRONICLE_LOGS)
 
 def get_cmd_output(command):
     import subprocess
@@ -149,7 +143,7 @@ def write_new_logs(project, host_dict):
 
 if __name__ == "__main__":
     # Get current hosts
-    for project in projects:
+    for project in PROJECTS:
         print("Checking {}".format(project))
 
         # Be sure the host file is there

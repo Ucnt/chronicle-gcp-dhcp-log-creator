@@ -53,12 +53,8 @@ To get these logs to Chronicle you can:
 * Authenticated (e.g. logged in) [Google Cloud SDK](https://cloud.google.com/sdk)
 
 ## Setup
-* Adjust variables
-  * Line 30 - {PATH_TO_GCLOUD_COMMAND}: Path of the gcloud command on your production compute instance
-  * Line 34 - {PATH_TO_GCLOUD_COMMAND}: Path of the gcloud command on your dev/testing machine/instance
-  * Line 35 - {PATH_FOR_HISTORIC_LIST_OF_IP_TO_HOST_MAPPINGS}: Path where you want the historic, cached, IP+Hostname list stored
-  * Line 34 - {PATH_TO_WRITE_NEW_LOGS_TO_FOR_CHRONICLE_INGEST}: Path where you want to write the Chronicle compatible CSV file
-  * Line 39 - {PROJECT1-n}: List of project names that you want to make DHCP logs for
+* Update the variables in the constants.py file.
+* If you haven't yet, authenticate your Google Cloud SDK: *gcloud auth login*
 
 ## Execution
 
@@ -68,7 +64,7 @@ To get these logs to Chronicle you can:
 
 * Result
   * Log files in the format of *gcp-ip-host-list-{project}* will be written to the current directory containing that project's cached host list
-  * staticip.log will be written to the current directory
+  * staticip.log will be written to the current directory containing logs to be sent to Chronicle
 
 ### Production (assuming running locally on the Chronicle forwarder)
 
@@ -103,7 +99,7 @@ sudo docker run \
 --log-opt max-file=10 \
 --net=host \
 -v /opt/conf:/opt/chronicle/external \
--v {PATH_TO_WRITE_NEW_LOGS_TO_FOR_CHRONICLE_INGEST}:/opt/chronicle/assetlogs \
+-v {NEW_LOGS_TO_FOR_CHRONICLE_INGEST}:/opt/chronicle/assetlogs \
 gcr.io/chronicle-container/cf_production_stable
 ```
 
