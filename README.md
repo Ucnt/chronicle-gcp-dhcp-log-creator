@@ -60,7 +60,7 @@ To get these logs to Chronicle you can:
 
 ### Test
 
-* Run: python3 make_dhcp_logs --dev
+* Run: *python3 make_dhcp_logs.py --dev*
 
 * Result
   * Log files in the format of *gcp-ip-host-list-{project}* will be written to the current directory containing that project's cached host list
