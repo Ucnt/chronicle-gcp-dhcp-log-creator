@@ -44,7 +44,7 @@ To get these logs to Chronicle you can:
   - If --log_all_hosts is given
     - Log all hosts
   - Else
-    - Log new or upated hosts
+    - Log new or updated hosts
 
 ## Requirements
 * Python3
@@ -63,7 +63,7 @@ To get these logs to Chronicle you can:
 * Run: *python3 make_dhcp_logs.py --dev*
 
 * Result
-  * Output showing itteration through projects and new/updated hosts, like below
+  * Output showing iteration through projects and new/updated hosts, like below
 
   ```
   Checking example-project-1
@@ -81,7 +81,7 @@ To get these logs to Chronicle you can:
 
 1. Create the local log file for ingest (necessary to prevent step 2 from failing), i.e. {PATH_TO_WRITE_NEW_LOGS_TO_FOR_CHRONICLE_INGEST}/staticip.log
 
-2. Setup ingest into Chronicle by adding a new "collector" to your confirutaion file, e.g. 
+2. Setup ingest into Chronicle by adding a new "collector" to your configuration file, e.g. 
 
 ```
   - file:
