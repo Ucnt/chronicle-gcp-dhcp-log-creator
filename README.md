@@ -126,4 +126,4 @@ gcr.io/chronicle-container/cf_production_stable
 
 * You should see a line like below after the script has run and written files to staticip.log.  The below example indicates that 5 new log files have been uploaded to Chronicle.
 
-Batch (5, ASSET_STATIC_IP) successfully uploaded.
+```Batch (5, ASSET_STATIC_IP) successfully uploaded.```
