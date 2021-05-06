@@ -63,6 +63,17 @@ To get these logs to Chronicle you can:
 * Run: *python3 make_dhcp_logs.py --dev*
 
 * Result
+  * Output showing itteration through projects and new/updated hosts, like below
+
+  ```
+  Checking example-project-1
+  Adding new host: new-jump-host-us-cen-1
+  Adding new host: new-dev-test-host
+  Checking example-project-2
+  Checking example-project-3
+  Adding new host: new-test-mysql-host-us-east-1
+  ```
+
   * Log files in the format of *gcp-ip-host-list-{project}* will be written to the current directory containing that project's cached host list
   * staticip.log will be written to the current directory containing logs to be sent to Chronicle
 
@@ -99,7 +110,7 @@ sudo docker run \
 --log-opt max-file=10 \
 --net=host \
 -v /opt/conf:/opt/chronicle/external \
--v {NEW_LOGS_TO_FOR_CHRONICLE_INGEST}:/opt/chronicle/assetlogs \
+-v {FOLDER_FOR_CHRONICLE_LOGS}:/opt/chronicle/assetlogs \
 gcr.io/chronicle-container/cf_production_stable
 ```
 
@@ -114,9 +125,9 @@ gcr.io/chronicle-container/cf_production_stable
 
 5. Validate it is successful
 
-* Check for cached hosts in {PATH_FOR_HISTORIC_LIST_OF_IP_TO_HOST_MAPPINGS}/gcp-ip-host-list{project}
+* Check for cached hosts in {FOLDER_FOR_HISTORIC_LOGS}/gcp-ip-host-list{project}
 
-* Check for new or updated hosts at {PATH_TO_WRITE_NEW_LOGS_TO_FOR_CHRONICLE_INGEST}/staticip.log
+* Check for new or updated hosts at {FOLDER_FOR_CHRONICLE_LOGS}/staticip.log
 
 * On the Chronicle forwarder, run *sudo docker logs cfps*
 
