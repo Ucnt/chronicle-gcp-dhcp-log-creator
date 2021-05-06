@@ -5,14 +5,14 @@ Author: Matt Svensson
 
 Purpose: Create Chronicle CSV static IP lists from gcloud compute instance lists
 
-Chronicle Log format: Format 2020-05-29T14:00:00Z,RENEW,192.168.1.1,router1,AABBCC123456
+Chronicle Log format: 2020-05-29T14:00:00Z,RENEW,192.168.1.1,router1,AABBCC123456
 
 Cron jobs for this script
 
 # Run every to minutes to look for new instances
 */2 * * * * python3 /opt/make_dhcp_logs/make_dhcp_logs.py
 # Run every day to upload DHCP logs for ALL instances, not just new ones.
-0 0 * * * python3 /opt/make_dhcp_logs/make_dhcp_logs.py --upload_all_hosts
+0 0 * * * python3 /opt/make_dhcp_logs/make_dhcp_logs.py --log_all_hosts
 
 
 '''
@@ -23,7 +23,7 @@ import random
 import datetime
 import argparse
 parser = argparse.ArgumentParser(description='')
-parser.add_argument("--upload_all_hosts", action="store_true", help="Upload all host DHCP records, not just new ones")
+parser.add_argument("--log_all_hosts", action="store_true", help="Logs all host DHCP records, not just new+updated ones")
 parser.add_argument("--dev", action="store_true", help="Used if you want to test this script on a local machine")
 args = parser.parse_args()
 if args.dev:
@@ -37,9 +37,9 @@ else:
 
 # Projects that you want to run
 projects = [
-    "",
-    "",
-    ""
+    "{PROJECT1}",
+    "{PROJECT2}",
+    "{PROJECT3}",
 ]
 
 def get_cmd_output(command):
@@ -70,8 +70,12 @@ def get_prior_host_dict(project):
     with open("{}-{}".format(historic_ip_host_list, project), "r") as f:
         for line in f:
             if "," in line:
-                ip, hostname, mac = line.strip().split(",")
-                hosts[hostname] = {"ip" : ip, "mac" : mac}
+                # Skip malformed lines, preventing errors and re-writing them later
+                try:
+                    ip, hostname, mac = line.strip().split(",")
+                    hosts[hostname] = {"ip" : ip, "mac" : mac}
+                except
+                    pass
     return hosts
 
 
@@ -83,9 +87,8 @@ def get_compute_instance_list(project):
 
     hosts = {}
     for line in output.splitlines():
-        if "10." in line:
-            hostname, ip = line.split()
-            hosts[hostname] = {"ip": ip, "mac": None}
+        hostname, ip = line.split()
+        hosts[hostname] = {"ip": ip, "mac": None}
     return hosts
 
 
@@ -120,14 +123,14 @@ def merge_dicts(prior_host_dict, current_instance_dict):
 def write_new_logs(project, host_dict):
     # Open a writer for the new historic and DHCP file to upload to Chronicle
     historics_host_file = open("{}-{}".format(historic_ip_host_list, project), "w+")
-    dhcp_file = open(asset_dhcp_list, "a+")
+    dhcp_file = open(asset_dhcp_list, "w+")
 
     # Create properly formatted date time
     date_time = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
     # For all the hosts, write DHCP entries for new/updated or if it's time to write daily new ones
     for hostname, attributes in host_dict.items():
-        if "update" in attributes or args.upload_all_hosts:
+        if "update" in attributes or args.log_all_hosts:
             dhcp_file.write('{date_time},RENEW,{ip_address},{hostname},{mac_address}\n'.format(
                 date_time=date_time,
                 ip_address=attributes["ip"],
@@ -145,12 +148,6 @@ def write_new_logs(project, host_dict):
 
 
 if __name__ == "__main__":
-    # remove old asset list
-    try:
-        get_cmd_output(command="rm {}".format(asset_dhcp_list))
-    except:
-        pass
-
     # Get current hosts
     for project in projects:
         print("Checking {}".format(project))
