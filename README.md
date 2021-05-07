@@ -69,14 +69,14 @@ To get these logs to Chronicle you can:
 * Result
   * Output showing iteration through projects and new/updated hosts, like below
 
-  ```
-  Checking example-project-1
-  Adding new host: new-jump-host-us-cen-1
-  Adding new host: new-dev-test-host
-  Checking example-project-2
-  Checking example-project-3
-  Adding new host: new-test-mysql-host-us-east-1
-  ```
+    ```
+    Checking example-project-1
+    Adding new host: new-jump-host-us-cen-1
+    Adding new host: new-dev-test-host
+    Checking example-project-2
+    Checking example-project-3
+    Adding new host: new-test-mysql-host-us-east-1
+    ```
 
   * Log files, per project like *gcp-ip-host-list-{project}*, will be written to the directory containing cached host to IP+MACs
   * staticip.log will be written to the current directory containing logs to be sent to Chronicle
