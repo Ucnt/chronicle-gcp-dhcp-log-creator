@@ -1,7 +1,7 @@
 # Chronicle GCP DHCP Log Creator
 
 ## Purpose
-This script uses Google's gcloud command line tool to create Chronicle compatible CSV logs to allow it to correlate IP addresses to hostnames.
+This script uses Google Cloud's gcloud command line tool to create Chronicle compatible CSV logs to allow it to correlate IP addresses to hostnames.
 
 ## Chronicle Blog Post
 Chronicle has a [blog post, link will be updated once blog post is up,](https://chronicle.security/blog/) discussing the below problem statement and solution.
