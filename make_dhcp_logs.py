@@ -182,12 +182,8 @@ if __name__ == "__main__":
     # Be sure all variables have been set
     check_for_updated_constants_vars()
 
-    # Get current hosts
     for project in PROJECTS:
         print("Checking {}".format(project))
-
-        # Be sure the host file is there
-        get_cmd_output(command="touch {}-{}".format(historic_ip_host_list, project))
 
         # Get prior host list
         prior_host_dict = get_prior_host_dict(project=project)
@@ -199,5 +195,5 @@ if __name__ == "__main__":
         # While doing this, mark those that need to be updated as host_dict[hostname]["updated"] = True
         host_dict = merge_dicts(prior_host_dict=prior_host_dict, current_instance_dict=current_instance_dict)
 
-        # Write new DHCP and prior host list file
+        # Write new DHCP logs and update the cache
         write_new_logs(project=project, host_dict=host_dict)
