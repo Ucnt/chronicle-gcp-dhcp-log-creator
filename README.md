@@ -122,9 +122,9 @@ gcr.io/chronicle-container/cf_production_stable
 
 ```
 # Run every to minutes to look for new instances
-*/2 * * * * python3 {PATH_TO_GCLOUD_COMMAND}/make_dhcp_logs.py
+*/2 * * * * python3 {FOLDER_FOR_SCRIPT}/make_dhcp_logs.py
 # Run every day to upload DHCP logs for ALL instances, not just new ones.
-0 0 * * * python3 {PATH_TO_GCLOUD_COMMAND}/make_dhcp_logs.py --upload_all_hosts
+0 0 * * * python3 {FOLDER_FOR_SCRIPT}/make_dhcp_logs.py --upload_all_hosts
 ```
 
 5. Validate it is successful
