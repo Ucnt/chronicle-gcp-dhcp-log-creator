@@ -57,7 +57,7 @@ To get these logs to Chronicle you can:
 * Authenticated (logged in) [Google Cloud SDK](https://cloud.google.com/sdk)
 
 ## Setup
-* Update the variables in the constants.py file.
+* Update the variables in constants.py.
 * If you haven't yet, authenticate your Google Cloud SDK: *gcloud auth login*
 
 ## Execution
@@ -78,12 +78,12 @@ To get these logs to Chronicle you can:
   Adding new host: new-test-mysql-host-us-east-1
   ```
 
-  * Log files in the format of *gcp-ip-host-list-{project}* will be written to the current directory containing that project's cached host list
+  * Log files, per project like *gcp-ip-host-list-{project}*, will be written to the directory containing cached host to IP+MACs
   * staticip.log will be written to the current directory containing logs to be sent to Chronicle
 
 ### Production (assuming running locally on the Chronicle forwarder)
 
-1. Create the local log file for ingest (necessary to prevent step 2 from failing), i.e. {PATH_TO_WRITE_NEW_LOGS_TO_FOR_CHRONICLE_INGEST}/staticip.log
+1. Create the local log file for ingest (necessary to prevent step 2 from failing), i.e. {FOLDER_FOR_CHRONICLE_LOGS}/staticip.log
 
 2. Setup ingest into Chronicle by adding a new "collector" to your configuration file, e.g. 
 
