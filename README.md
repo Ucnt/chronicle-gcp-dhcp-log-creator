@@ -129,12 +129,12 @@ To get these logs to Chronicle you can:
 
 5. Validation
 
-* Check for cached hosts in {FOLDER_FOR_HISTORIC_LOGS}/gcp-ip-host-list-{project}
+   * Check for cached hosts in {FOLDER_FOR_HISTORIC_LOGS}/gcp-ip-host-list-{project}
 
-* Check for new or updated hosts in {FOLDER_FOR_CHRONICLE_LOGS}/staticip.log
+   * Check for new or updated hosts in {FOLDER_FOR_CHRONICLE_LOGS}/staticip.log
 
-* On the Chronicle forwarder, run *sudo docker logs cfps*
+   * On the Chronicle forwarder, run *sudo docker logs cfps*
 
-  * You should see a line like below after the script has run and written files to staticip.log.  The below example indicates that 5 new log lines have been uploaded to Chronicle.
+     * You should see a line like below after the script has run and written files to staticip.log.  The below example indicates that 5 new log lines have been uploaded to Chronicle.
 
-    ```Batch (5, ASSET_STATIC_IP) successfully uploaded.```
+       ```Batch (5, ASSET_STATIC_IP) successfully uploaded.```
