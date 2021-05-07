@@ -127,7 +127,7 @@ gcr.io/chronicle-container/cf_production_stable
 0 0 * * * python3 {FOLDER_FOR_SCRIPT}/make_dhcp_logs.py --log_all_hosts
 ```
 
-5. Validate it is successful
+5. Validation
 
 * Check for cached hosts in {FOLDER_FOR_HISTORIC_LOGS}/gcp-ip-host-list{project}
 
