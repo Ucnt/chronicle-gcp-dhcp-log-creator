@@ -8,7 +8,8 @@ This script uses Google's gcloud command line tool to create Chronicle compatibl
 Chronicle has a [blog post, link will be updated once blog post is up,](https://chronicle.security/blog/) discussing the below problem statement and solution.
 
 ## Background
-If you are sending logs to Chronicle that contain GCP IP addresses, you need to get logs to Chronicle so it can correlate the IP address to a hostname.  
+If you are sending logs to Chronicle that contain GCP IP addresses, you need to get DHCP logs to Chronicle so it can correlate the IP address to a hostname.  
+
 Unfortunately, GCP doesn't have DHCP logs.  Even if you use Packet Mirroring (e.g. a software defined span/tap), GCP instances don't use normal DHCP requests and responses.
 
 Luckily, Chronicle allows you to send it DHCP logs in a CSV format like 
