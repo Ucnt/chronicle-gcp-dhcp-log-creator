@@ -129,7 +129,7 @@ gcr.io/chronicle-container/cf_production_stable
 
 5. Validation
 
-* Check for cached hosts in {FOLDER_FOR_HISTORIC_LOGS}/gcp-ip-host-list{project}
+* Check for cached hosts in {FOLDER_FOR_HISTORIC_LOGS}/gcp-ip-host-list-{project}
 
 * Check for new or updated hosts at {FOLDER_FOR_CHRONICLE_LOGS}/staticip.log
 
