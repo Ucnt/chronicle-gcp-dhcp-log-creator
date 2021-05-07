@@ -21,12 +21,10 @@ import sys
 import os
 import random
 import datetime
-import argparse
+from arg_parse import args
 from constants import *
-parser = argparse.ArgumentParser(description='')
-parser.add_argument("--log_all_hosts", action="store_true", help="Logs all host DHCP records, not just new+updated ones")
-parser.add_argument("--dev", action="store_true", help="Used if you want to test this script on a local machine")
-args = parser.parse_args()
+
+# Set gcloud and output variables dependant on constants.py and --dev argument.
 if args.dev:
     gcloud_cmd=PATH_TO_GCLOUD_COMMAND_DEV
     historic_ip_host_list="gcp-ip-host-list"
@@ -38,6 +36,11 @@ else:
 
 
 def check_for_updated_constants_vars():
+    '''
+    Ensure that all arguments have been populated
+
+    If not, print error and exit.
+    '''
     if not (PATH_TO_GCLOUD_COMMAND_DEV or PATH_TO_GCLOUD_COMMAND or FOLDER_FOR_HISTORIC_LOGS or FOLDER_FOR_CHRONICLE_LOGS):
         print("You need to set all constants.py variables")
         sys.exit()
@@ -119,7 +122,7 @@ def merge_dicts(prior_host_dict, current_instance_dict):
         if hostname in prior_host_dict:
                 # If the IP address is new, update the IP only
                 if current_instance_dict[hostname]["ip"] != prior_host_dict[hostname]["ip"]:
-                    print("updating {}: {} with {}".format(
+                    print("updating {}: {} to {}".format(
                         hostname, prior_host_dict[hostname]["ip"], current_instance_dict[hostname]["ip"]))
                     prior_host_dict[hostname]["ip"] = current_instance_dict[hostname]["ip"]
                     prior_host_dict[hostname]["update"] = True

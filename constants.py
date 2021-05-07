@@ -19,11 +19,11 @@ PATH_TO_GCLOUD_COMMAND_DEV = ""
 ########################################
 # Production variables
 ########################################
-# gcloud command path on your machine, e.g. /usr/bin/gcloud
+# gcloud command path on your machine, e.g. /snap/bin/gcloud
 PATH_TO_GCLOUD_COMMAND = ""
-# Path to cache historic logs to, e.g. /var/log/
+# Folder to cache historic logs to, e.g. /var/log/
 FOLDER_FOR_HISTORIC_LOGS = ""
-# Path to cache logs to send to Chronicle, e.g. /var/log/  
+# Folder to cache logs to send to Chronicle to, e.g. /var/log/  
 # This is the same path that you will use for the docker run command
 FOLDER_FOR_CHRONICLE_LOGS = ""
 
