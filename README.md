@@ -87,36 +87,36 @@ To get these logs to Chronicle you can:
 
 2. Setup ingest into Chronicle by adding a new "collector" to your configuration file, e.g. 
 
-```
-  - file:
-       common:
-         enabled: true
-         data_type: ASSET_STATIC_IP
-         data_hint:
-         batch_n_seconds: 10
-         batch_n_bytes: 1048576
-       file_path: /opt/chronicle/assetlogs/staticip.log
-       poll: true
-```
+   ```
+     - file:
+          common:
+            enabled: true
+            data_type: ASSET_STATIC_IP
+            data_hint:
+            batch_n_seconds: 10
+            batch_n_bytes: 1048576
+          file_path: /opt/chronicle/assetlogs/staticip.log
+          poll: true
+   ```
 
 3. Restart the forwarder's docker container, adding a new volume mount for your logs e.g.
 
-```
-sudo docker stop cfps
+   ```
+   sudo docker stop cfps
 
-sudo docker rm cfps
+   sudo docker rm cfps
 
-sudo docker run \
---detach \
---name cfps \
---restart=always \
---log-opt max-size=100m \
---log-opt max-file=10 \
---net=host \
--v /opt/conf:/opt/chronicle/external \
--v {FOLDER_FOR_CHRONICLE_LOGS}:/opt/chronicle/assetlogs \
-gcr.io/chronicle-container/cf_production_stable
-```
+   sudo docker run \
+   --detach \
+   --name cfps \
+   --restart=always \
+   --log-opt max-size=100m \
+   --log-opt max-file=10 \
+   --net=host \
+   -v /opt/conf:/opt/chronicle/external \
+   -v {FOLDER_FOR_CHRONICLE_LOGS}:/opt/chronicle/assetlogs \
+   gcr.io/chronicle-container/cf_production_stable
+   ```
 
 4. Setup cronjobs to run the script
 
