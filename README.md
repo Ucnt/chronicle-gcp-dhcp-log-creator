@@ -53,7 +53,7 @@ To get these logs to Chronicle you can:
 ## Requirements
 * Python3
 * jq
-* Google Cloud Account with permissions to do [compute instances list](https://cloud.google.com/sdk/gcloud/reference/compute/instances/list)
+* Google Cloud Account with permissions to do [compute instances list](https://cloud.google.com/sdk/gcloud/reference/compute/instances/list) on the projects you will be running this script on.
 * Authenticated (e.g. logged in) [Google Cloud SDK](https://cloud.google.com/sdk)
 
 ## Setup
