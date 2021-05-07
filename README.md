@@ -35,7 +35,6 @@ To get these logs to Chronicle you can:
 
 ## Script Methodology
 
-- Pull in your cached GCP host list
 - For each project
   - Run *gcloud compute instances list --project {desired_project}* to get all current compute instances.
   - For every compute instance
