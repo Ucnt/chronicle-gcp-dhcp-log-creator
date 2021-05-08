@@ -31,8 +31,8 @@ if args.dev:
     asset_dhcp_list="staticip.log"
 else:
     gcloud_cmd=PATH_TO_GCLOUD_COMMAND
-    historic_ip_host_list="{folder}/gcp-ip-host-list".format(folder=FOLDER_FOR_HISTORIC_LOGS)
-    asset_dhcp_list="{folder}/staticip.log".format(folder=FOLDER_FOR_CHRONICLE_LOGS)
+    historic_ip_host_list=f"{FOLDER_FOR_HISTORIC_LOGS}/gcp-ip-host-list"
+    asset_dhcp_list=f"{FOLDER_FOR_CHRONICLE_LOGS}/staticip.log"
 
 
 def check_for_updated_constants_vars():
@@ -67,10 +67,10 @@ def get_cmd_output(command):
         output, error = p.communicate()
         p_status = p.wait()
         if error:
-            print("Error: {}".format(error))
+            print(f"Error: {error}")
         return output.decode('utf-8', 'ignore').strip()
     except Exception as e:
-        logger.critical("Error getting cmd output from %s.  Exiting - %s" % (command, str(e)))
+        print(f"Error getting cmd output from {command} - {str(e)}")
 
 
 def get_prior_host_dict(project):
@@ -80,7 +80,7 @@ def get_prior_host_dict(project):
     Dict format: d[hostname] = {"ip" : ip, "mac" : mac}
     '''
     hosts = {}
-    with open("{}-{}".format(historic_ip_host_list, project), "r") as f:
+    with open(f"{historic_ip_host_list}-{project}", "r") as f:
         for line in f:
             if "," in line:
                 # Skip malformed lines, preventing errors and re-writing them later
@@ -98,9 +98,9 @@ def get_compute_instance_list(project):
 
     Dict format: d[hostname] = {"ip" : ip, "mac" : mac}
     '''
-    command = '''
+    command = f'''
         {gcloud_cmd} compute instances list --project {project} --format=json | jq -r '.[] | "\(.name) \(.networkInterfaces[0].networkIP)"'
-    '''.format(gcloud_cmd=gcloud_cmd, project=project)
+    '''
     output = get_cmd_output(command=command)
 
     hosts = {}
@@ -122,13 +122,12 @@ def merge_dicts(prior_host_dict, current_instance_dict):
         if hostname in prior_host_dict:
                 # If the IP address is new, update the IP only
                 if current_instance_dict[hostname]["ip"] != prior_host_dict[hostname]["ip"]:
-                    print("updating {}: {} to {}".format(
-                        hostname, prior_host_dict[hostname]["ip"], current_instance_dict[hostname]["ip"]))
+                    print(f'updating {hostname}: {prior_host_dict[hostname]["ip"]} to {current_instance_dict[hostname]["ip"]}')
                     prior_host_dict[hostname]["ip"] = current_instance_dict[hostname]["ip"]
                     prior_host_dict[hostname]["update"] = True
         # It's a new host that needs a new mac
         else:
-            print("Adding new host: {}".format(hostname))
+            print(f"Adding new host: {hostname}")
             new_mac_address = "%02x:%02x:%02x:%02x:%02x:%02x" % (random.randint(0, 255),
                  random.randint(0, 255),
                  random.randint(0, 255),
@@ -153,7 +152,7 @@ def write_new_logs(project, host_dict):
     Write the updated (or all logs if --log-all-hosts is specified) to be read by Chronicle
     '''
     # Open a writer for the new historic and DHCP file to upload to Chronicle
-    historics_host_file = open("{}-{}".format(historic_ip_host_list, project), "w+")
+    historics_host_file = open(f"{historic_ip_host_list}-{project}", "w+")
     dhcp_file = open(asset_dhcp_list, "w+")
 
     # Create properly formatted date time
@@ -163,16 +162,10 @@ def write_new_logs(project, host_dict):
     for hostname, attributes in host_dict.items():
         # Write new or updated hosts to the Chronicle DHCP list to ingest
         if "update" in attributes or args.log_all_hosts:
-            dhcp_file.write('{date_time},RENEW,{ip_address},{hostname},{mac_address}\n'.format(
-                date_time=date_time,
-                ip_address=attributes["ip"],
-                hostname=hostname,
-                mac_address=attributes["mac"]
-            ))
+            dhcp_file.write(f'{date_time},RENEW,{attributes["ip"]},{hostname},{attributes["mac"]}\n')
 
         # Be sure the historic host file has ALL hosts
-        historics_host_file.write("{},{},{}\n".format(
-            attributes["ip"], hostname, attributes["mac"]))
+        historics_host_file.write(f'{attributes["ip"]},{hostname},{attributes["mac"]}\n')
 
     # Close the files
     historics_host_file.close()
@@ -184,7 +177,7 @@ if __name__ == "__main__":
     check_for_updated_constants_vars()
 
     for project in PROJECTS:
-        print("Checking {}".format(project))
+        print(f"Checking {project}")
 
         # Get prior host list
         prior_host_dict = get_prior_host_dict(project=project)
