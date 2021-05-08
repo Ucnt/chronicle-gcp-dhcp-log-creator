@@ -148,7 +148,7 @@ def merge_dicts(prior_host_dict, current_instance_dict):
     return prior_host_dict
 
 
-def write_new_logs(project, host_dict):
+def write_new_logs(project, host_dict, dhcp_file):
     '''
     Given the project name and its new hostname to IP+Mac dictionary
 
@@ -156,7 +156,6 @@ def write_new_logs(project, host_dict):
     '''
     # Open a writer for the new historic and DHCP file to upload to Chronicle
     historics_host_file = open(f"{historic_ip_host_list}-{project}", "w+")
-    dhcp_file = open(asset_dhcp_list, "w+")
 
     # Create properly formatted date time
     date_time = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -179,6 +178,10 @@ if __name__ == "__main__":
     # Be sure all variables have been set
     check_for_updated_constants_vars()
 
+    # Create new DHCP file for output to Chronicle
+    # Could do this for each project but simpler for seeing all results
+    dhcp_file = open(asset_dhcp_list, "w+")
+
     for project in PROJECTS:
         print(f"Checking {project}")
 
@@ -193,4 +196,4 @@ if __name__ == "__main__":
         host_dict = merge_dicts(prior_host_dict=prior_host_dict, current_instance_dict=current_instance_dict)
 
         # Write new DHCP logs and update the cache
-        write_new_logs(project=project, host_dict=host_dict)
+        write_new_logs(project=project, host_dict=host_dict, dhcp_file=dhcp_file)
