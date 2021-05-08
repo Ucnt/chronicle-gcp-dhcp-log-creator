@@ -118,10 +118,11 @@ To get these logs to Chronicle you can:
    gcr.io/chronicle-container/cf_production_stable
    ```
 
-4. Setup cronjobs to run the script
+4. Setup cronjobs to run the script.
 
    ```
-   # Run every to minutes to look for new instances
+   # Run every to 2 minutes to look for new instances
+   # Every 2 minutes is giving plenty of time.  You likely could do every minute.
    */2 * * * * python3 {FOLDER_FOR_SCRIPT}/make_dhcp_logs.py
    # Run every day to upload DHCP logs for ALL instances, not just new ones.
    0 0 * * * python3 {FOLDER_FOR_SCRIPT}/make_dhcp_logs.py --log_all_hosts
