@@ -80,15 +80,18 @@ def get_prior_host_dict(project):
     Dict format: d[hostname] = {"ip" : ip, "mac" : mac}
     '''
     hosts = {}
-    with open(f"{historic_ip_host_list}-{project}", "r") as f:
-        for line in f:
-            if "," in line:
-                # Skip malformed lines, preventing errors and re-writing them later
-                try:
-                    ip, hostname, mac = line.strip().split(",")
-                    hosts[hostname] = {"ip" : ip, "mac" : mac}
-                except:
-                    pass
+    try:
+        with open(f"{historic_ip_host_list}-{project}", "r") as f:
+            for line in f:
+                if "," in line:
+                    # Skip malformed lines, preventing errors and re-writing them later
+                    try:
+                        ip, hostname, mac = line.strip().split(",")
+                        hosts[hostname] = {"ip" : ip, "mac" : mac}
+                    except:
+                        pass
+    except FileNotFoundError:
+        pass
     return hosts
 
 
