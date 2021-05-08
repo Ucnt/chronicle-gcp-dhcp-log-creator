@@ -171,7 +171,6 @@ def write_new_logs(project, host_dict, dhcp_file):
 
     # Close the files
     historics_host_file.close()
-    dhcp_file.close()
 
 
 if __name__ == "__main__":
@@ -197,3 +196,5 @@ if __name__ == "__main__":
 
         # Write new DHCP logs and update the cache
         write_new_logs(project=project, host_dict=host_dict, dhcp_file=dhcp_file)
+
+    dhcp_file.close()
