@@ -125,12 +125,12 @@ def merge_dicts(prior_host_dict, current_instance_dict):
         if hostname in prior_host_dict:
                 # If the IP address is new, update the IP only
                 if current_instance_dict[hostname]["ip"] != prior_host_dict[hostname]["ip"]:
-                    print(f'updating {hostname}: {prior_host_dict[hostname]["ip"]} to {current_instance_dict[hostname]["ip"]}')
+                    print(f'    Updating {hostname}: {prior_host_dict[hostname]["ip"]} to {current_instance_dict[hostname]["ip"]}')
                     prior_host_dict[hostname]["ip"] = current_instance_dict[hostname]["ip"]
                     prior_host_dict[hostname]["update"] = True
         # It's a new host that needs a new mac
         else:
-            print(f"Adding new host: {hostname}")
+            print(f"    Adding new host: {hostname}")
             new_mac_address = "%02x:%02x:%02x:%02x:%02x:%02x" % (random.randint(0, 255),
                  random.randint(0, 255),
                  random.randint(0, 255),
