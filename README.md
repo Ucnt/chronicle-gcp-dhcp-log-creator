@@ -70,11 +70,11 @@ To get these logs to Chronicle you can:
 
      ```
      Checking example-project-1
-     Adding new host: new-jump-host-us-cen-1
-     Adding new host: new-dev-test-host
+         Adding new host: new-jump-host-us-cen-1
+         Adding new host: new-dev-test-host
      Checking example-project-2
      Checking example-project-3
-     Adding new host: new-test-mysql-host-us-east-1
+         Adding new host: new-test-mysql-host-us-east-1
      ```
 
    * Check for cached hosts in gcp-ip-host-list-{project}
