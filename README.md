@@ -4,7 +4,7 @@
 This script uses Google Cloud's gcloud command line tool to create Chronicle compatible CSV logs to allow it to correlate IP addresses to hostnames.
 
 ## Chronicle Blog Post
-Chronicle has a [blog post, link will be updated once blog post is up,](https://chronicle.security/blog/) discussing the below problem statement and solution.
+Chronicle has a [blog post](https://chroniclesec.medium.com/how-to-dynamically-correlate-google-cloud-compute-engine-instance-network-traffic-using-chronicle-2e39f629b553) discussing the below problem statement and solution.
 
 ## Background
 If you are sending logs to Chronicle that contain GCP IP addresses, you need to get DHCP logs to Chronicle so it can correlate the IP address to a hostname.  
