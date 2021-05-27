@@ -38,11 +38,11 @@ To get these logs to Chronicle you can:
 - For each project
   - Run *gcloud compute instances list --project {desired_project}* to get all current compute instances.
   - For every compute instance
-    - Check if the hostname is in your cache
+    - Check if the ip is in your cache
     - If yes
-      - Ensure you have an updated IP address, keeping the same MAC address
+      - Ensure you have an updated hostname, keeping the same MAC address
     - If not
-      - Cache the new hostname and IP, with a random MAC address
+      - Cache the new IP and hostname, with a random MAC address
   - If --log_all_hosts is given
     - Log all hosts
   - Else
