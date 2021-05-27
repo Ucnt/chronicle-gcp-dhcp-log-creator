@@ -1,5 +1,8 @@
 # Chronicle GCP DHCP Log Creator
 
+## UPDATE
+If you cloned this repo before May 27th, 2021 at 1pm EST, please do a git pull of make_dhcp_logs.py.  There was a small logic error that, over time, would cause correlation issues in that it cached multiple hostnames per IP address.
+
 ## Purpose
 This script uses Google Cloud's gcloud command line tool to create Chronicle compatible CSV logs to allow it to correlate IP addresses to hostnames.
 
