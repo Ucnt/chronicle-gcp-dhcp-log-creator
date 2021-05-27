@@ -123,7 +123,7 @@ def merge_dicts(prior_host_dict, current_instance_dict):
     for ip, attributes in current_instance_dict.items():
         # If the host has already been seen
         if ip in prior_host_dict:
-                # If the IP address is new, update the IP only
+                # If the hostname is different, update it
                 if current_instance_dict[ip]["hostname"] != prior_host_dict[ip]["hostname"]:
                     print(f'    Updating {ip}: {prior_host_dict[ip]["hostname"]} to {current_instance_dict[ip]["hostname"]}')
                     prior_host_dict[ip]["hostname"] = current_instance_dict[ip]["hostname"]
