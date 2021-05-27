@@ -87,7 +87,7 @@ def get_prior_host_dict(project):
                     # Skip malformed lines, preventing errors and re-writing them later
                     try:
                         ip, hostname, mac = line.strip().split(",")
-                        hosts[hostname] = {"ip" : ip, "mac" : mac}
+                        hosts[ip] = {"hostname" : hostname, "mac" : mac}
                     except:
                         pass
     except FileNotFoundError:
@@ -109,7 +109,7 @@ def get_compute_instance_list(project):
     hosts = {}
     for line in output.splitlines():
         hostname, ip = line.split()
-        hosts[hostname] = {"ip": ip, "mac": None}
+        hosts[ip] = {"hostname": hostname, "mac": None}
     return hosts
 
 
@@ -117,20 +117,19 @@ def merge_dicts(prior_host_dict, current_instance_dict):
     '''
     Given the cached and current hostname to IP+Mac dictionaries, return an updated dictionary to cache
 
-    The dictionary will add an "update" value in order to identify if the host needs to be send to Chronicle    
+    The dictionary will add an "update" value in order to identify if the host needs to be send to Chronicle
     '''
     # Merge the dictionaries into one single dictionary, marking which ones need to be updated
-    for hostname, attributes in current_instance_dict.items():
+    for ip, attributes in current_instance_dict.items():
         # If the host has already been seen
-        if hostname in prior_host_dict:
+        if ip in prior_host_dict:
                 # If the IP address is new, update the IP only
-                if current_instance_dict[hostname]["ip"] != prior_host_dict[hostname]["ip"]:
-                    print(f'    Updating {hostname}: {prior_host_dict[hostname]["ip"]} to {current_instance_dict[hostname]["ip"]}')
-                    prior_host_dict[hostname]["ip"] = current_instance_dict[hostname]["ip"]
-                    prior_host_dict[hostname]["update"] = True
+                if current_instance_dict[ip]["hostname"] != prior_host_dict[ip]["hostname"]:
+                    print(f'    Updating {ip}: {prior_host_dict[ip]["hostname"]} to {current_instance_dict[ip]["hostname"]}')
+                    prior_host_dict[ip]["hostname"] = current_instance_dict[ip]["hostname"]
+                    prior_host_dict[ip]["update"] = True
         # It's a new host that needs a new mac
         else:
-            print(f"    Adding new host: {hostname}")
             new_mac_address = "%02x:%02x:%02x:%02x:%02x:%02x" % (random.randint(0, 255),
                  random.randint(0, 255),
                  random.randint(0, 255),
@@ -138,11 +137,12 @@ def merge_dicts(prior_host_dict, current_instance_dict):
                  random.randint(0, 255),
                  random.randint(0, 255))
 
-            prior_host_dict[hostname] = {
-                "ip" : current_instance_dict[hostname]["ip"],
+            prior_host_dict[ip] = {
+                "hostname" : current_instance_dict[ip]["hostname"],
                 "mac" : new_mac_address,
                 "update" : True
             }
+            print(f'    Adding new host: {ip} - {current_instance_dict[ip]["hostname"]} {prior_host_dict[ip]["mac"]} ')
 
     # Return back the newly update host list
     return prior_host_dict
@@ -161,13 +161,13 @@ def write_new_logs(project, host_dict, dhcp_file):
     date_time = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
     # For all the hosts, write DHCP entries for new/updated or if it's time to write daily new ones
-    for hostname, attributes in host_dict.items():
+    for ip, attributes in host_dict.items():
         # Write new or updated hosts to the Chronicle DHCP list to ingest
         if "update" in attributes or args.log_all_hosts:
-            dhcp_file.write(f'{date_time},RENEW,{attributes["ip"]},{hostname},{attributes["mac"]}\n')
+            dhcp_file.write(f'{date_time},RENEW,{attributes["hostname"]},{ip},{attributes["mac"]}\n')
 
         # Be sure the historic host file has ALL hosts
-        historics_host_file.write(f'{attributes["ip"]},{hostname},{attributes["mac"]}\n')
+        historics_host_file.write(f'{ip},{attributes["hostname"]},{attributes["mac"]}\n')
 
     # Close the files
     historics_host_file.close()
