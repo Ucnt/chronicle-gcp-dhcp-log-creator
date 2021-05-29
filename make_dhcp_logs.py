@@ -164,7 +164,7 @@ def write_new_logs(project, host_dict, dhcp_file):
     for ip, attributes in host_dict.items():
         # Write new or updated hosts to the Chronicle DHCP list to ingest
         if "update" in attributes or args.log_all_hosts:
-            dhcp_file.write(f'{date_time},RENEW,{attributes["hostname"]},{ip},{attributes["mac"]}\n')
+            dhcp_file.write(f'{date_time},RENEW,{ip},{attributes["hostname"]},{attributes["mac"]}\n')
 
         # Be sure the historic host file has ALL hosts
         historics_host_file.write(f'{ip},{attributes["hostname"]},{attributes["mac"]}\n')
